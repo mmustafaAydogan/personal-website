@@ -1,0 +1,14 @@
+{%- comment -%}
+Kategori kartları. Her kart ilgili bölüme atlar (#terminal gibi).
+{%- endcomment -%}
+<nav class="category-cards" aria-label="Categories">
+  {%- for category in site.data.tools_meta.categories %}
+  {%- assign count = site.tools | where: "category", category.id | size %}
+  {%- if count > 0 %}
+  <a class="category-card" href="{{ '/tools/' | relative_url }}#{{ category.id }}">
+    <b data-tr="{{ category.name_tr }}">{{ category.name }}</b>
+    <span data-tr="{{ count }} araç">{{ count }} tools</span>
+  </a>
+  {%- endif %}
+  {%- endfor %}
+</nav>

@@ -1,0 +1,52 @@
+---
+layout: default
+---
+<article class="tool project-detail" data-gh-project data-gh-owner="{{ site.github_username }}">
+  <p class="tool-crumb">
+    <a href="{{ '/' | relative_url }}" data-tr="Ana sayfa">Home</a>
+    <span class="tool-crumb-sep" aria-hidden="true">&rsaquo;</span>
+    <span data-tr="Projelerim">My Projects</span>
+  </p>
+
+  <header class="tool-head">
+    <span class="letter-mark logo-lg" data-project-mark aria-hidden="true">P</span>
+    <div class="tool-head-body">
+      <p class="section-eyebrow" data-tr="GitHub projem">GitHub project</p>
+      <h1 class="tool-title" data-project-title>Project</h1>
+      <p class="tool-tagline is-loading" data-gh="tagline">Loading from GitHub…</p>
+      <ul class="badges">
+        <li class="badge badge-open"><span data-tr="Açık kaynak">Open source</span> &middot; <span data-gh="license">…</span></li>
+        <li class="badge badge-stars" data-gh="stars" hidden></li>
+        <li class="badge" data-gh="language" hidden></li>
+      </ul>
+    </div>
+    <p class="tool-links">
+      <a class="tool-link is-primary" data-project-github href="https://github.com/{{ site.github_username }}" target="_blank" rel="noopener noreferrer" data-tr="GitHub'da aç">Open on GitHub</a>
+      <a class="tool-link" data-gh="homepage" href="#" hidden target="_blank" rel="noopener noreferrer" data-tr="Web sitesi">Website</a>
+    </p>
+  </header>
+
+  <section class="readme">
+    <div class="readme-head">
+      <h2>README</h2>
+      <a data-project-github href="https://github.com/{{ site.github_username }}" target="_blank" rel="noopener noreferrer" data-tr="GitHub'da aç →">Open on GitHub &rarr;</a>
+    </div>
+    <div class="readme-layout">
+      <div class="readme-main">
+        <div class="readme-body is-loading" data-gh="readme">Loading README…</div>
+        <button type="button" class="readme-toggle" aria-expanded="false" hidden data-tr="Devamını göster">Show more</button>
+      </div>
+      <nav class="readme-toc" aria-label="README contents" hidden>
+        <p class="readme-toc-title" data-tr="İçindekiler">Contents</p>
+        <ul data-gh="readme-toc"></ul>
+      </nav>
+    </div>
+  </section>
+
+  <dl class="tool-facts">
+    <dt>GitHub</dt>
+    <dd><a data-project-repo data-project-github href="https://github.com/{{ site.github_username }}" target="_blank" rel="noopener noreferrer">{{ site.github_username }}</a> &middot; <span data-tr="son güncelleme">last updated</span> <span data-gh="pushed">…</span></dd>
+  </dl>
+
+  <p class="gh-error project-error" data-project-error hidden></p>
+</article>

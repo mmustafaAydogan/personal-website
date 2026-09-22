@@ -1,0 +1,21 @@
+---
+layout: default
+---
+<div class="tools-index" data-gh-stars="{{ site.github_username }}">
+  <header class="page-head">
+    <h1 class="page-heading" data-tr="{{ page.title_tr | default: page.title }}">{{ page.title }}</h1>
+    <p class="page-lead" data-tr="GitHub'da yıldızladığım repolar.">Repositories I've starred on GitHub.</p>
+  </header>
+
+  <div class="star-tools" data-gh="star-tools" hidden>
+    <input type="search" class="star-search" data-gh="star-search" placeholder="Search repos" data-tr-placeholder="Repo ara" aria-label="Search repos">
+    <select class="star-lang" data-gh="star-lang" aria-label="Filter by language">
+      <option value="" data-tr="Tüm diller">All languages</option>
+    </select>
+    <span class="star-count" data-gh="star-count"></span>
+  </div>
+
+  <ul class="tool-cards" data-gh="star-list"></ul>
+  <p class="gh-status is-loading" data-gh="star-status" data-tr="Yükleniyor…">Loading…</p>
+  <p class="star-more"><button type="button" class="readme-toggle" data-gh="star-more" hidden data-tr="Daha fazla göster">Show more</button></p>
+</div>

@@ -1,0 +1,40 @@
+{%- comment -%}
+minima'nın head.html'i buraya kopyalandı; tek fark, blog kaldırıldığı için
+{% feed_meta %} satırının çıkarılmış olması. Favicon, font gibi eklemeler
+de buraya gelir.
+{%- endcomment -%}
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {%- comment -%}
+  Tema, sayfa çizilmeden önce belirlenir; yoksa açık tema yüklenip sonra koyuya
+  geçen bir yanıp sönme olurdu.
+  {%- endcomment -%}
+  <script>
+    (function () {
+      var theme = "light";
+      try { if (localStorage.getItem("theme") === "dark") theme = "dark"; } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  {%- comment -%}
+  Dil tercihi, sayfa render edilmeden önce belirlenir; TR bloklarını baştan
+  gizler, sayfa yüklenir yüklenmez doğru dil aktif olur.
+  {%- endcomment -%}
+  <script>
+    (function () {
+      var l = "en";
+      try { l = localStorage.getItem("lang") || "en"; } catch (e) {}
+      document.documentElement.setAttribute("lang", l);
+    })();
+  </script>
+  {%- seo -%}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="{{ "/assets/main.css" | relative_url }}?v={{ site.time | date: "%s" }}">
+  <script defer src="{{ "/assets/js/theme.js" | relative_url }}?v={{ site.time | date: "%s" }}"></script>
+  <script defer src="{{ "/assets/js/lang-switch.js" | relative_url }}?v={{ site.time | date: "%s" }}"></script>
+  <script defer src="{{ "/assets/js/gh-live.js" | relative_url }}?v={{ site.time | date: "%s" }}"></script>
+</head>

@@ -1,0 +1,7 @@
+{%- comment -%}
+Kısa metinleri markdown'dan geçirir ama kramdown'un eklediği <p> sarmalayıcısını
+atar. Satır içinde kullanılacak yerler için: başlık, tagline, etiket, liste öğesi.
+JSON'daki metinlerde `kod` gibi satır içi markdown geçebiliyor.
+Kullanımı: {% include md-inline.html text=page.tagline %}
+{%- endcomment -%}
+{{- include.text | markdownify | replace: '<p>', '' | replace: '</p>', '' | strip -}}

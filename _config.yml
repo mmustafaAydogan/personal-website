@@ -1,0 +1,52 @@
+# Site ayarları
+# Not: Bu dosya `jekyll serve` sırasında otomatik yeniden yüklenmez.
+# Değiştirdiğinde sunucuyu durdurup yeniden başlat.
+
+title: Mustafa Aydoğan
+author: Mustafa Aydoğan       # alt bilgide isim olarak görünür
+email: mmustafaydogan34@gmail.com
+description: >-
+  Tools I genuinely use in my daily work — what they do, why I prefer them,
+  and how to set them up.
+
+lang: en
+baseurl: "/personal-website"
+url: "https://mmustafaaydogan.github.io"
+
+github_username: mmustafaAydogan
+linkedin_username: mustafa-aydoğan-6565a416b
+
+# Build ayarları
+theme: minima
+plugins: []
+
+# Sass uyarıları: minima 2.5.2 (tema) hâlâ @import ve darken()/lighten()
+# kullanıyor; Dart Sass bunları "ileride kalkacak" diye işaretliyor. Site
+# çalışıyor, tema güncellenmediği için uyarılar susturuluyor. Sass 3.0
+# çıkıp minima buna uymazsa tema kopyalanıp @use'a çevrilmeli.
+sass:
+  quiet_deps: true
+  silence_deprecations:
+    - import
+    - global-builtin
+    - color-functions
+
+# Menüde görünecek sayfalar ve sıraları
+header_pages:
+  - tools.md
+  - stars.md
+  - profile.md
+
+# Araçlar koleksiyonu.
+# Her araç _tools/<ad>.md dosyasıdır: front matter'a github linki, kategori ve
+# öne çıkan bilgisi yazılır; geri kalanı tarayıcıda GitHub'dan canlı çekilir.
+# Ayrıntı için docs/adr/0003-arac-icerigi-github-dan-canli-cekilir.md
+collections:
+  tools:
+    output: true
+    permalink: /tools/:name/
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor/

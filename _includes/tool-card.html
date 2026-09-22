@@ -1,0 +1,38 @@
+{%- comment -%}
+Ana sayfa ve araç listesi aynı kartı kullanır.
+Açık kaynak araçta açıklama ve yıldız sayfa açılırken GitHub'dan gelir
+(assets/js/gh-live.js); kapalı kaynakta front matter'daki tagline kullanılır.
+Alt satırda kategori, dil ve lisans etiketleri durur; liste sayfası kategori
+başlığı altında olduğu için orada show_category=false verilir.
+Kullanımı: {% include tool-card.html tool=item %}
+          {% include tool-card.html tool=item show_category=false %}
+{%- endcomment -%}
+{%- include gh-repo.html tool=include.tool -%}
+{%- assign card_category = site.data.tools_meta.categories | where: "id", include.tool.category | first -%}
+<li class="tool-card"{% if gh_live %} data-gh-repo="{{ gh_repo }}"{% endif %}>
+  <a class="tool-card-link" href="{{ include.tool.url | relative_url }}">
+    <span class="tool-card-head">
+      {%- include tool-mark.html tool=include.tool size="logo-sm" -%}
+      <span class="tool-card-name">{{ include.tool.title }}</span>
+      {%- if gh_live %}
+      <span class="tool-card-stars" data-gh="stars" hidden></span>
+      {%- endif %}
+    </span>
+    {%- if gh_live %}
+    <span class="tool-card-tagline is-loading" data-gh="tagline">GitHub'dan yükleniyor…</span>
+    {%- else %}
+    <span class="tool-card-tagline">{% include md-inline.html text=include.tool.tagline %}</span>
+    {%- endif %}
+  </a>
+  <ul class="tool-card-meta">
+    {%- if include.show_category != false and card_category %}
+    <li class="meta-tag meta-category">{{ card_category.name }}</li>
+    {%- endif %}
+    {%- if gh_live %}
+    <li class="meta-tag" data-gh="language" hidden></li>
+    <li class="meta-tag" data-gh="license" hidden></li>
+    {%- elsif include.tool.license %}
+    <li class="meta-tag">{{ include.tool.license }}</li>
+    {%- endif %}
+  </ul>
+</li>

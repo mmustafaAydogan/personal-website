@@ -1,0 +1,25 @@
+<section class="profile-section brand-projects" data-brand-slider aria-labelledby="brands-{{ include.lang }}">
+  <div class="brand-section-head">
+    <div>
+      <p class="section-eyebrow">{% if include.lang == 'tr' %}Proje deneyimi{% else %}Project experience{% endif %}</p>
+      <h2 class="section-title" id="brands-{{ include.lang }}">{% if include.lang == 'tr' %}Katkı Sağladığım Marka Projeleri{% else %}Selected Brand Projects{% endif %}</h2>
+      <p class="brand-projects-lead">{% if include.lang == 'tr' %}E-ticaret altyapıları, sistem entegrasyonları ve performans geliştirmelerinde görev aldığım markalardan bazıları.{% else %}A selection of brands I have worked with on e-commerce platforms, system integrations and performance improvements.{% endif %}</p>
+    </div>
+  </div>
+
+  <div class="brand-slider-viewport" data-brand-viewport tabindex="0">
+    <ul class="brand-slider-track">
+      {% assign brands = "saatvesaat|Saat&Saat,rossmann|Rossmann,gurgencler|Gürgençler,dagi|Dagi,vicco|Vicco,armagan|Armağan Oyuncak,merrell|Merrell,saucony|Saucony" | split: "," %}
+      {% for brand in brands %}
+        {% assign values = brand | split: "|" %}
+        <li class="brand-slide">
+          <div class="brand-logo-frame">
+            <img src="{{ '/assets/brands/' | append: values[0] | append: '.png' | relative_url }}" alt="{{ values[1] }}" data-brand-image>
+            <span class="brand-logo-fallback" aria-hidden="true">{{ values[1] }}</span>
+          </div>
+          <p>{{ values[1] }}</p>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>

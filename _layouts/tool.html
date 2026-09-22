@@ -1,0 +1,135 @@
+---
+layout: default
+---
+{%- include gh-repo.html tool=page -%}
+{%- assign category = site.data.tools_meta.categories | where: "id", page.category | first -%}
+<article class="tool"{% if gh_live %} data-gh-repo="{{ gh_repo }}"{% endif %}>
+
+  <p class="tool-crumb">
+    <a href="{{ '/tools/' | relative_url }}" data-tr="Araçlar">Tools</a>
+    <span class="tool-crumb-sep" aria-hidden="true">&rsaquo;</span>
+    <a href="{{ '/tools/' | relative_url }}#{{ page.category }}" data-tr="{{ category.name_tr }}">{{ category.name }}</a>
+  </p>
+
+  <header class="tool-head">
+    {%- include tool-mark.html tool=page size="logo-lg" -%}
+    <div class="tool-head-body">
+      <h1 class="tool-title">{{ page.title }}</h1>
+      {%- if gh_live %}
+      <p class="tool-tagline is-loading" data-gh="tagline">Loading from GitHub…</p>
+      {%- elsif page.tagline_tr %}
+      <p class="tool-tagline" data-lang="en">{% include md-inline.html text=page.tagline %}</p>
+      <p class="tool-tagline" data-lang="tr" hidden>{% include md-inline.html text=page.tagline_tr %}</p>
+      {%- else %}
+      <p class="tool-tagline">{% include md-inline.html text=page.tagline %}</p>
+      {%- endif %}
+
+      <ul class="badges">
+        {%- if gh_live %}
+        <li class="badge badge-open"><span data-tr="Açık kaynak">Open source</span> &middot; <span data-gh="license">…</span></li>
+        <li class="badge badge-stars" data-gh="stars" hidden></li>
+        <li class="badge" data-gh="language" hidden></li>
+        {%- else %}
+        {%- if page.license %}<li class="badge">{{ page.license }}</li>{% endif %}
+        {%- if page.pricing %}<li class="badge">{{ page.pricing }}</li>{% endif %}
+        {%- endif %}
+      </ul>
+    </div>
+
+    <p class="tool-links">
+      {%- if gh_live %}
+      <a class="tool-link is-primary" href="{{ page.github }}" target="_blank" rel="noopener noreferrer" data-tr="GitHub'da aç">Open on GitHub</a>
+      {%- if page.website %}
+      <a class="tool-link" href="{{ page.website }}" data-tr="Web sitesi">Website</a>
+      {%- else %}
+      <a class="tool-link" data-gh="homepage" href="{{ page.github }}" hidden target="_blank" rel="noopener noreferrer" data-tr="Web sitesi">Website</a>
+      {%- endif %}
+      {%- else %}
+      {%- if page.website %}
+      <a class="tool-link is-primary" href="{{ page.website }}" data-tr="Web sitesi">Website</a>
+      {%- endif %}
+      {%- if page.github %}
+      <a class="tool-link" href="{{ page.github }}" target="_blank" rel="noopener noreferrer" data-tr="GitHub (destek reposu)">GitHub (support repo)</a>
+      {%- endif %}
+      {%- endif %}
+    </p>
+  </header>
+
+  {%- unless gh_live %}
+
+  {%- if page.description %}
+  {%- if page.description_tr %}
+  <div data-lang="en"><h2>What it does</h2>{{ page.description | markdownify }}</div>
+  <div data-lang="tr" hidden><h2>Ne işe yarar</h2>{{ page.description_tr | markdownify }}</div>
+  {%- else %}
+  <h2 data-tr="Ne işe yarar">What it does</h2>{{ page.description | markdownify }}
+  {%- endif %}
+  {%- endif %}
+
+  {%- if page.whyIUse %}
+  {%- if page.whyIUse_tr %}
+  <div data-lang="en"><h2>Why I use it</h2>{{ page.whyIUse | markdownify }}</div>
+  <div data-lang="tr" hidden><h2>Neden kullanıyorum</h2>{{ page.whyIUse_tr | markdownify }}</div>
+  {%- else %}
+  <h2 data-tr="Neden kullanıyorum">Why I use it</h2>{{ page.whyIUse | markdownify }}
+  {%- endif %}
+  {%- endif %}
+
+  {%- if page.highlights.size > 0 %}
+  <h2 data-tr="Öne çıkanlar">Highlights</h2>
+  <ul class="highlights">
+    {%- for item in page.highlights %}
+    <li>{% include md-inline.html text=item %}</li>
+    {%- endfor %}
+  </ul>
+  {%- endif %}
+
+  {%- if page.note and page.note != "" %}
+  <aside class="tool-note"><strong data-tr="Not:">Note:</strong> {% include md-inline.html text=page.note %}</aside>
+  {%- endif %}
+
+  {%- endunless %}
+
+  {%- assign own_note = content | strip %}
+  {%- if own_note != "" %}
+  <section class="tool-own-note">
+    <h2 data-tr="Benim notum">My Notes</h2>
+    {{ content }}
+  </section>
+  {%- endif %}
+
+  {%- if gh_live %}
+  <section class="readme">
+    <div class="readme-head">
+      <h2>README</h2>
+      <a href="{{ page.github }}" target="_blank" rel="noopener noreferrer" data-tr="GitHub'da aç →">Open on GitHub &rarr;</a>
+    </div>
+    <div class="readme-layout">
+      <div class="readme-main">
+        <div class="readme-body is-loading" data-gh="readme">Loading README…</div>
+        <button type="button" class="readme-toggle" aria-expanded="false" hidden data-tr="Devamını göster">Show more</button>
+      </div>
+      <nav class="readme-toc" aria-label="README contents" hidden>
+        <p class="readme-toc-title" data-tr="İçindekiler">Contents</p>
+        <ul data-gh="readme-toc"></ul>
+      </nav>
+    </div>
+  </section>
+  {%- endif %}
+
+  <dl class="tool-facts">
+    {%- if page.platforms.size > 0 %}
+    <dt data-tr="Platformlar">Platforms</dt>
+    <dd>{{ page.platforms | join: ", " }}</dd>
+    {%- endif %}
+    {%- if page.requirements %}
+    <dt data-tr="Gereksinim">Requirements</dt>
+    <dd>{{ page.requirements }}</dd>
+    {%- endif %}
+    {%- if gh_live %}
+    <dt>GitHub</dt>
+    <dd><a href="{{ page.github }}" target="_blank" rel="noopener noreferrer">{{ gh_repo }}</a> &middot; <span data-tr="son güncelleme">last updated</span> <span data-gh="pushed">…</span></dd>
+    {%- endif %}
+  </dl>
+
+</article>

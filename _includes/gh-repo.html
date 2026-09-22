@@ -1,0 +1,15 @@
+{%- comment -%}
+GitHub linkinden "sahip/depo" çıkarır ve `gh_repo` değişkenine yazar; araç
+canlı veri çekiyorsa (`gh_live`) true olur. Kapalı kaynak araçlarda
+(openSource: false) GitHub deposu destek deposu olduğu için canlı veri çekilmez.
+Kullanımı: {% include gh-repo.html tool=item %}
+{%- endcomment -%}
+{%- assign gh_live = false -%}
+{%- assign gh_repo = "" -%}
+{%- if include.tool.github and include.tool.openSource != false -%}
+  {%- assign gh_parts = include.tool.github | remove: "https://github.com/" | split: "/" -%}
+  {%- if gh_parts.size >= 2 -%}
+    {%- assign gh_repo = gh_parts[0] | append: "/" | append: gh_parts[1] -%}
+    {%- assign gh_live = true -%}
+  {%- endif -%}
+{%- endif -%}

@@ -1,0 +1,25 @@
+{%- comment -%}
+Aracın görsel işareti: logo dosyası varsa onu, yoksa renkli bir harf işareti basar.
+Harf işaretinin rengi araç adından türetilir (aynı ad her zaman aynı renk), 6 tonluk
+bir palette dönerler; tonların açık ve koyu tema karşılıkları assets/main.scss'te.
+Bir tonu elle seçmek için araç dosyasının front matter'ına `tone: 1` ile `tone: 6`
+arası bir sayı yazılır.
+Kullanımı: {% include tool-mark.html tool=item size="logo-sm" %}
+{%- endcomment -%}
+{%- if include.tool.logo -%}
+<span class="logo {{ include.size }}">
+  <img src="{{ include.tool.logo | relative_url }}" alt="{{ include.tool.title }} logosu" loading="lazy">
+</span>
+{%- else -%}
+{%- assign mark_tone = include.tool.tone -%}
+{%- unless mark_tone -%}
+  {%- assign alphabet = "abcdefghijklmnopqrstuvwxyz0123456789" | split: "" -%}
+  {%- assign initial = include.tool.title | slice: 0 | downcase -%}
+  {%- assign initial_pos = 0 -%}
+  {%- for ch in alphabet -%}
+    {%- if ch == initial -%}{%- assign initial_pos = forloop.index0 -%}{%- break -%}{%- endif -%}
+  {%- endfor -%}
+  {%- assign mark_tone = initial_pos | plus: include.tool.title.size | modulo: 6 | plus: 1 -%}
+{%- endunless -%}
+<span class="letter-mark {{ include.size }}" data-tone="{{ mark_tone }}" aria-hidden="true">{{ include.tool.title | slice: 0 | upcase }}</span>
+{%- endif -%}

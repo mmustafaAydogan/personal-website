@@ -1,0 +1,2279 @@
+---
+# Sadece bu Sass dosyasının front matter'a ihtiyacı var (çizgiler yeterli).
+---
+
+// ─────────────────────────────────────────────────────────────
+// Renkler: "Sis mavisi" paleti, açık ve koyu tema
+//
+// İki katman var:
+//  1) Aşağıdaki $c-* Sass değişkenleri yalnızca minima'nın derleme sırasında
+//     yaptığı hesaplar (darken/lighten) için, yani AÇIK tema değerleri.
+//  2) Sitenin asıl renkleri CSS değişkenleri (--bg, --text, ...). Açık değerler
+//     :root'ta, koyu değerler [data-theme="dark"] altında; tema düğmesi
+//     (assets/js/theme.js) bu özelliği değiştirir. Renk ayarı için iki yeri
+//     birlikte güncelle: $c-* ve :root / [data-theme="dark"] blokları.
+// ─────────────────────────────────────────────────────────────
+
+$c-bg:      #f5f3ee;
+$c-surface: #fdfcf9;
+$c-border:  #dedad0;
+$c-text:    #2b2f36;
+$c-muted:   #666d78;
+$c-accent:  #476f95;
+
+$background-color: $c-bg;
+$text-color:       $c-text;
+$brand-color:      $c-accent;
+$grey-color:       $c-muted;
+$grey-color-light: $c-border;
+$grey-color-dark:  $c-muted;
+
+$content-width: 860px;
+
+// Yazı tipleri (_includes/head.html Google Fonts'tan yükler)
+$base-font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+$code-font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+@import "minima";
+
+// ── Tema değişkenleri ────────────────────────────────────────
+
+:root {
+  color-scheme: light;
+  --bg:          #f5f3ee;
+  --surface:     #fdfcf9;
+  --border:      #dedad0;
+  --text:        #2b2f36;
+  --muted:       #666d78;
+  --accent:      #476f95;
+  --accent-soft: rgba(71, 111, 149, 0.35);
+  --accent-mid:  rgba(71, 111, 149, 0.5);
+  --tint:        rgba(43, 47, 54, 0.05);   // kartların içindeki hafif kutular
+  --code-bg:     rgba(43, 47, 54, 0.07);
+  --star:        #a16207;
+  --star-line:   rgba(161, 98, 7, 0.4);
+  --plate:       #ffffff;                  // logo altlığı
+
+  // Logosuz araçların harf işareti tonları (yazı / zemin), hepsi yumuşak.
+  --tone-1-fg: #34587a;  --tone-1-bg: #dbe6f1;   // mavi
+  --tone-2-fg: #3d6b52;  --tone-2-bg: #dcebe1;   // adaçayı
+  --tone-3-fg: #7a5f22;  --tone-3-bg: #efe6d2;   // kum
+  --tone-4-fg: #5d4a86;  --tone-4-bg: #e6dff0;   // mor
+  --tone-5-fg: #2f6b6b;  --tone-5-bg: #d8ebeb;   // camgöbeği
+  --tone-6-fg: #55524a;  --tone-6-bg: #e4e2dc;   // taş
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg:          #14181d;
+  --surface:     #1c222a;
+  --border:      #2f3944;
+  --text:        #e3e7ec;
+  --muted:       #97a1ad;
+  --accent:      #86aed4;
+  --accent-soft: rgba(134, 174, 212, 0.35);
+  --accent-mid:  rgba(134, 174, 212, 0.5);
+  --tint:        rgba(0, 0, 0, 0.25);
+  --code-bg:     rgba(255, 255, 255, 0.07);
+  --star:        #e0b355;
+  --star-line:   rgba(224, 179, 85, 0.45);
+  --plate:       #eceae4;
+
+  --tone-1-fg: #a9c7e6;  --tone-1-bg: #24384d;
+  --tone-2-fg: #a6d1b7;  --tone-2-bg: #22382c;
+  --tone-3-fg: #e0c98a;  --tone-3-bg: #3a3220;
+  --tone-4-fg: #c4b5e6;  --tone-4-bg: #30283f;
+  --tone-5-fg: #9dd3d3;  --tone-5-bg: #1f3a3a;
+  --tone-6-fg: #c9c6bd;  --tone-6-bg: #33322e;
+}
+
+// ── minima'nın sabit renkli yerleri, değişkenlere bağlanıyor ─
+
+html,
+body {
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+a {
+  color: var(--accent);
+
+  &:visited {
+    color: var(--accent);
+  }
+
+  &:hover {
+    color: var(--text);
+  }
+}
+
+blockquote {
+  color: var(--muted);
+  border-left-color: var(--border);
+}
+
+table {
+  color: var(--text);
+  border-color: var(--border);
+
+  tr:nth-child(even) {
+    background-color: var(--tint);
+  }
+
+  th {
+    background-color: var(--tint);
+    border-color: var(--border);
+  }
+
+  td {
+    border-color: var(--border);
+  }
+}
+
+// minima kod bloklarına düz beyaz zemin veriyordu (GitHub README'lerindeki
+// .highlight kutuları da buna takılıyor); koyu temada yazı görünmez olurdu.
+.highlight,
+.highlighter-rouge .highlight {
+  background: none;
+}
+
+.svg-icon {
+  fill: var(--muted);
+}
+
+// ── Sayfa genişliği ──────────────────────────────────────────
+//
+// minima içeriği 800px'lik sabit bir sütuna sıkıştırıyor; geniş ekranda
+// sayfanın ortasında dar bir şerit kalıyordu. Bunun yerine ekranın %85'i
+// kullanılıyor, iki yanda %7.5 boşluk kalıyor.
+
+.wrapper {
+  // Ortalı, üst sınırlı: geniş ekranda içerik dağılmaz, menü, sayfa ve alt bilgi
+  // hep aynı hizada durur. Dar ekranda kenarlarda 20px boşluk kalır.
+  max-width: 1100px;
+  width: calc(100% - 40px);
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 0;
+  padding-left: 0;
+}
+
+// ── minima'nın renkli olduğu için bozulan yerleri ──────────────────
+
+pre,
+code {
+  background-color: var(--code-bg);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+// Header: kartlarla aynı yüzey rengi, sayfayla arasında gölge, kaydırınca üstte kalır.
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-top: 0;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--surface);
+  box-shadow: 0 2px 12px rgba(20, 24, 29, 0.06);
+}
+
+[data-theme="dark"] .site-header {
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+}
+
+.site-title,
+.site-title:visited {
+  color: var(--text);
+}
+
+// Başlık: sol tarafta site adı, sağda menü ve tema düğmesi. minima bunu
+// float ile yapıyordu ve mobilde hamburger menüye çeviriyordu; kendi
+// header.html'imizde hamburger yok, o yüzden minima'nın float/absolute
+// kuralları burada (mobil dahil) sıfırlanıyor.
+
+.site-header .wrapper {
+  min-height: 68px;
+  // Header tam genişlik: site adı sol kenarda, menü sağ kenarda.
+  max-width: none;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 32px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0 20px;
+
+  // minima'nın clearfix'i flex'te boş bir üçüncü öğe olurdu ve menüyü ortaya iterdi.
+  &::after {
+    display: none;
+  }
+}
+
+.site-title {
+  float: none;
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.site-nav {
+  float: none;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  line-height: 1;
+  padding: 0;
+  margin: 0;
+
+  .page-link,
+  .page-link:visited,
+  .page-link:not(:last-child) {
+    display: inline;
+    margin: 0;
+    padding: 0;
+    color: var(--muted);
+  }
+
+  // Menü bağlantıları: hap biçimli, bulunulan sayfa vurgulu
+  .page-link,
+  .page-link:visited,
+  .page-link:not(:last-child) {
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .page-link:hover {
+    color: var(--text);
+    background-color: var(--code-bg);
+    text-decoration: none;
+  }
+
+  .page-link.is-current {
+    color: var(--accent);
+    font-weight: 600;
+    background-color: var(--accent-soft);
+  }
+
+  @include media-query($on-palm) {
+    position: static;
+    top: auto;
+    right: auto;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    text-align: left;
+
+    .page-link,
+    .page-link:not(:last-child) {
+      display: inline;
+      margin: 0;
+      padding: 0;
+    }
+  }
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+}
+
+.footer-heading,
+.footer-col-wrapper {
+  color: var(--muted);
+}
+
+// ─────────────────────────────────────────────────────────────
+// Araç sayfaları
+// ─────────────────────────────────────────────────────────────
+
+.page-head {
+  margin-bottom: $spacing-unit;
+}
+
+.page-lead {
+  color: var(--muted);
+  margin-bottom: 0;
+}
+
+.page-updated {
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: $spacing-unit * 1.5;
+}
+
+.section {
+  margin-bottom: $spacing-unit * 1.5;
+}
+
+.section-title {
+  font-size: 22px;
+  margin-bottom: $spacing-unit * 0.5;
+}
+
+.section-more {
+  margin-top: $spacing-unit * 0.6;
+}
+
+// ── Logo ve harf işareti ─────────────────────────────────────
+//
+// Logoların hepsinin arka planı saydam ve bir kısmı koyu renkli çizim
+// (örneğin Elasticvue lacivert). Krem zeminde okunmaları için hepsi
+// açık renk bir altlığa oturuyor; böylece sonradan eklenecek logolar da
+// garanti okunur.
+
+.logo,
+.letter-mark {
+  // minima global border-box tanımlamıyor; bu olmadan .logo'nun padding'i
+  // genişliğe ekleniyor ve logolu kart, harf işaretli karttan kayık duruyor.
+  box-sizing: border-box;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.logo {
+  background-color: var(--plate);
+  padding: 5px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+.letter-mark {
+  background-color: var(--tone-bg, var(--border));
+  color: var(--tone-fg, var(--text));
+  font-weight: 600;
+  line-height: 1;
+}
+
+// tool-mark.html her harf işaretine adından türeyen bir data-tone (1-6) verir.
+@for $i from 1 through 6 {
+  .letter-mark[data-tone="#{$i}"] {
+    --tone-bg: var(--tone-#{$i}-bg);
+    --tone-fg: var(--tone-#{$i}-fg);
+  }
+}
+
+.logo-sm,
+.letter-mark.logo-sm {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  font-size: 16px;
+}
+
+.logo-lg,
+.letter-mark.logo-lg {
+  width: 60px;
+  height: 60px;
+  font-size: 26px;
+}
+
+// ── Araç kartları ────────────────────────────────────────────
+
+.tool-cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: $spacing-unit * 0.5;
+}
+
+.tool-card {
+  // Dikey kutu: kurulum komutu kartın altına yapışsın. Aksi halde kurulum
+  // komutu olmayan araçların (Amphetamine) kartında komut kutuları
+  // birbirine göre kayık duruyor.
+  display: flex;
+  flex-direction: column;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: $spacing-unit * 0.6;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+
+  &:hover {
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
+}
+
+.tool-card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.tool-card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  min-height: 34px;
+}
+
+.tool-card-name {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.tool-card-stars {
+  margin-left: auto;
+  font-size: 13px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.tool-card-tagline {
+  display: block;
+  margin-bottom: $spacing-unit * 0.4;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.tool-card-meta {
+  list-style: none;
+  margin: auto 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.meta-tag {
+  font-size: 12px;
+  line-height: 1;
+  padding: 4px 9px;
+  border-radius: 999px;
+  color: var(--muted);
+  background-color: var(--tint);
+  border: 1px solid var(--border);
+}
+
+.meta-category {
+  color: var(--accent);
+  border-color: var(--accent-soft);
+}
+
+.tool-card-install {
+  display: block;
+  // Kartın altına yapışır; böylece kurulum komutu olmayan araçlar (Amphetamine)
+  // yüzünden komut kutuları birbirine göre kayık durmaz.
+  margin-top: auto;
+  padding: 5px 9px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
+  background-color: var(--tint);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  // Uzun docker komutları karttan taşıyordu; kartta yatay kaydırma çubuğu
+  // fark edilmediği için satır kaydırılıyor. Detay sayfasındaki kurulum
+  // kutusu tek satır kalmaya devam ediyor.
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+// ── Araç detayı ──────────────────────────────────────────────
+
+.tool-crumb {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: $spacing-unit * 0.4;
+}
+
+.tool-crumb-sep {
+  margin: 0 6px;
+}
+
+.tool-head {
+  display: flex;
+  align-items: center;
+  gap: $spacing-unit * 0.6;
+  margin-bottom: $spacing-unit * 0.6;
+}
+
+.tool-title {
+  font-size: 34px;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  margin-bottom: 4px;
+}
+
+.tool-tagline {
+  color: var(--muted);
+  font-size: 18px;
+  margin-bottom: 0;
+}
+
+.badges,
+.tags {
+  list-style: none;
+  margin: 0 0 $spacing-unit * 0.5;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.badge,
+.tag {
+  font-size: 13px;
+  line-height: 1;
+  padding: 6px 11px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--muted);
+}
+
+.badge-open {
+  border-color: var(--accent-mid);
+  color: var(--accent);
+}
+
+.badge-stars {
+  border-color: var(--star-line);
+  color: var(--star);
+}
+
+.tool-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: $spacing-unit * 0.6;
+}
+
+.tool-link {
+  display: inline-block;
+  font-size: 15px;
+  color: var(--accent);
+  padding: 7px 15px;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  text-decoration: none;
+
+  &:visited {
+    color: var(--accent);
+  }
+
+  &:hover {
+    background-color: var(--accent);
+    color: var(--bg);
+    text-decoration: none;
+  }
+}
+
+.install {
+  display: flex;
+  align-items: stretch;
+  margin-bottom: $spacing-unit;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.install-manager {
+  flex: none;
+  display: flex;
+  align-items: center;
+  padding: 9px 13px;
+  font-size: 13px;
+  color: var(--muted);
+  background-color: var(--tint);
+  border-right: 1px solid var(--border);
+}
+
+.install-command {
+  flex: 1;
+  padding: 9px 13px;
+  font-size: 14px;
+  border: 0;
+  background: transparent;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.highlights li {
+  margin-bottom: 7px;
+}
+
+.tool-note {
+  border-left: 3px solid var(--border);
+  padding: 2px 0 2px $spacing-unit * 0.6;
+  color: var(--muted);
+  font-size: 15px;
+  margin-bottom: $spacing-unit;
+}
+
+.tool-own-note {
+  border-top: 1px solid var(--border);
+  padding-top: $spacing-unit * 0.5;
+  margin-top: $spacing-unit;
+}
+
+.tool-facts {
+  margin-top: $spacing-unit;
+  padding-top: $spacing-unit * 0.5;
+  border-top: 1px solid var(--border);
+  font-size: 15px;
+
+  dt {
+    font-weight: 600;
+    color: var(--muted);
+    margin-top: 9px;
+  }
+
+  dd {
+    margin-left: 0;
+  }
+}
+
+// ── Kategori kartları (araçlar sayfası) ──────────────────────
+
+.category-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: $spacing-unit * 1.2;
+}
+
+.category-card {
+  display: block;
+  padding: 11px 14px;
+  color: var(--text);
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  text-decoration: none;
+  transition: border-color 0.15s, transform 0.15s;
+
+  b {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  span {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  // minima `a:visited` rengini değiştiriyor
+  &:visited {
+    color: var(--text);
+  }
+
+  &:hover {
+    border-color: var(--accent);
+    text-decoration: none;
+    transform: translateY(-1px);
+  }
+}
+
+// Kategori bölümüne atlandığında başlık ekranın tam tepesine yapışmasın
+.section[id] {
+  scroll-margin-top: $spacing-unit * 0.7;
+}
+
+[hidden] { display: none !important; }
+
+// ── GitHub'dan canlı gelen içerik ────────────────────────────
+//
+// assets/js/gh-live.js bu alanları doldurur. Veri gelene kadar `is-loading`
+// sınıfı soluk bir nabız verir, hata olursa sınıf kalkar ve yedek metin kalır.
+
+.is-loading {
+  color: var(--muted);
+  animation: gh-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes gh-pulse {
+  50% { opacity: 0.45; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .is-loading { animation: none; }
+}
+
+.readme {
+  margin-top: $spacing-unit * 1.2;
+  padding-top: $spacing-unit * 0.5;
+  border-top: 1px solid var(--border);
+}
+
+.readme-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+
+  h2 {
+    margin-bottom: 4px;
+  }
+}
+
+.readme-source {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: $spacing-unit * 0.5;
+}
+
+.readme-body {
+  position: relative;
+  max-height: 44rem;
+  overflow: hidden;
+  padding: $spacing-unit * 0.6;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 16px;
+  overflow-wrap: anywhere;
+
+  // Kırpılmış halde alt kenarı solduran gölge.
+  &::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 5rem;
+    background: linear-gradient(to bottom, transparent, var(--surface));
+    pointer-events: none;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  pre {
+    overflow-x: auto;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+  }
+
+  h1, h2, h3 {
+    margin-top: 1.2em;
+    font-size: 1.25em;
+  }
+
+  h1:first-child {
+    margin-top: 0;
+  }
+
+  // README'lerdeki rozet sıraları satır yüksekliğini bozmasın.
+  p > a > img {
+    vertical-align: middle;
+  }
+
+  &.is-loading::after {
+    display: none;
+  }
+}
+
+.readme.is-expanded .readme-body {
+  max-height: none;
+
+  &::after {
+    display: none;
+  }
+}
+
+.readme-toggle {
+  display: block;
+  margin: 10px auto 0;
+  padding: 7px 18px;
+  font: inherit;
+  font-size: 15px;
+  color: var(--accent);
+  background: transparent;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--accent);
+    color: var(--bg);
+  }
+}
+
+.gh-error {
+  margin: 0;
+  color: var(--muted);
+}
+
+// ── Tema düğmesi ─────────────────────────────────────────────
+//
+// Menü çubuğunda (_includes/header.html); assets/js/theme.js bağlar.
+
+.theme-toggle {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  font-size: 17px;
+  line-height: 1;
+  color: var(--muted);
+  background-color: transparent;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+
+  &:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+}
+
+// README'lerin "sadece açık / sadece koyu tema" görselleri
+// (GitHub'ın #gh-dark-mode-only, #gh-light-mode-only işaretleri).
+[data-theme="light"] .readme-body img[src$="#gh-dark-mode-only"],
+[data-theme="dark"] .readme-body img[src$="#gh-light-mode-only"] {
+  display: none;
+}
+
+
+// ── Ana sayfa girişi ─────────────────────────────────────────
+
+.hero {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 28px 32px;
+  margin: $spacing-unit * 0.6 0 $spacing-unit * 1.6;
+}
+
+.hero-avatar {
+  flex: none;
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background-color: var(--surface);
+}
+
+.hero-body {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.hero-eyebrow {
+  margin: 0;
+  color: var(--muted);
+  font-size: 17px;
+}
+
+.hero-name {
+  margin: 2px 0 12px;
+  font-size: clamp(34px, 6vw, 54px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+.hero-intro {
+  max-width: 54ch;
+  margin: 0 0 $spacing-unit * 0.6;
+  font-size: 18px;
+  line-height: 1.55;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+
+  .tool-link {
+    font-size: 16px;
+    padding: 9px 20px;
+  }
+}
+
+.hero-stats {
+  margin: $spacing-unit * 0.6 0 0;
+}
+
+// Dolu (ana) buton
+.tool-link.is-primary,
+.tool-link.is-primary:visited {
+  background-color: var(--accent);
+  color: var(--bg);
+}
+
+.tool-link.is-primary:hover {
+  background-color: transparent;
+  color: var(--accent);
+}
+
+// Ana sayfa girişinde hepsi aynı çerçeveli görünümde: dolu buton, menüde
+// seçili sayfa gibi okunuyordu.
+.hero-actions .tool-link.is-primary,
+.hero-actions .tool-link.is-primary:visited {
+  background-color: transparent;
+  color: var(--accent);
+}
+
+.hero-actions .tool-link.is-primary:hover,
+.hero-actions .tool-link.is-primary:visited:hover {
+  background-color: var(--accent);
+  color: var(--bg);
+}
+
+
+// ── Profilim sayfası ─────────────────────────────────────────
+
+.profile-body {
+  max-width: 70ch;
+  margin-bottom: $spacing-unit * 1.5;
+
+  h2 {
+    margin-top: $spacing-unit * 1.2;
+    font-size: 24px;
+  }
+
+  h3 {
+    margin: $spacing-unit * 0.8 0 2px;
+    font-size: 18px;
+  }
+
+  // "Pozisyon, Şirket" başlığının altındaki *tarih aralığı* satırı
+  h3 + p > em:only-child {
+    color: var(--muted);
+    font-size: 15px;
+  }
+}
+
+// ── GitHub katkı grafiği ─────────────────────────────────────
+
+.contrib-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+
+  @include media-query($on-palm) {
+    flex-direction: column;
+  }
+}
+
+.contrib-box {
+  box-sizing: border-box; // minima border-box tanımlamıyor; padding genişliğe eklenip mobilde taşıyordu
+  position: relative;
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px 10px;
+}
+
+.contrib-graph {
+  overflow-x: auto;
+  padding-bottom: 6px;
+
+  // Hücreler sabit boyutta (10px) çizilir; kutu grafiğe göre daralır, dar
+  // ekranda yatay kaydırılır.
+  svg {
+    display: block;
+    max-width: none;
+  }
+
+  text {
+    fill: var(--muted);
+    font-size: 10px;
+    font-family: inherit;
+  }
+
+  rect {
+    fill: var(--lv);
+  }
+
+  // Yılın henüz gelmemiş günleri: boş ve soluk, ipucu vermez.
+  rect.is-future {
+    opacity: 0.45;
+  }
+
+  rect[data-date]:hover {
+    stroke: var(--text);
+    stroke-width: 1px;
+  }
+}
+
+.contrib-tip {
+  position: absolute;
+  z-index: 5;
+  padding: 5px 9px;
+  font-size: 12px;
+  line-height: 1.3;
+  white-space: nowrap;
+  color: var(--bg);
+  background-color: var(--text);
+  border-radius: 6px;
+  pointer-events: none;
+
+  strong {
+    font-weight: 600;
+  }
+}
+
+.contrib-years {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  @include media-query($on-palm) {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  button {
+    display: block;
+    width: 100%;
+    min-width: 84px;
+    padding: 6px 14px;
+    font: inherit;
+    font-size: 14px;
+    text-align: left;
+    color: var(--muted);
+    background: transparent;
+    border: 0;
+    border-radius: 6px;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--text);
+      background-color: var(--tint);
+    }
+
+    &[aria-pressed="true"] {
+      color: var(--bg);
+      background-color: var(--accent);
+    }
+  }
+}
+
+.contrib-status {
+  margin: 0;
+  color: var(--muted);
+}
+
+.contrib-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.contrib-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  i {
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    border-radius: 2px;
+    background-color: var(--lv);
+  }
+}
+
+// Yoğunluk düzeyleri: 0 boş, 4 en yoğun. Vurgu rengi zemine karıştırılıyor,
+// böylece açık ve koyu temada aynı palete uyuyor.
+.lv0 { --lv: var(--border); }
+.lv1 { --lv: color-mix(in srgb, var(--accent) 30%, var(--surface)); }
+.lv2 { --lv: color-mix(in srgb, var(--accent) 52%, var(--surface)); }
+.lv3 { --lv: color-mix(in srgb, var(--accent) 76%, var(--surface)); }
+.lv4 { --lv: var(--accent); }
+
+
+// ── Profilim sayfası: ortalı sütun, içerik soldan başlar ─────
+//
+// Sayfa ekranın ortasında tek bir sütun olarak durur; sütunun içindeki her şey
+// (başlıklar, metin, grafik) soldan hizalıdır.
+
+.profile {
+  max-width: 880px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+
+  .profile-body {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .contrib-layout {
+    justify-content: flex-start;
+  }
+}
+
+
+// ── Yazı tipleri ─────────────────────────────────────────────
+
+body {
+  font-feature-settings: "cv11", "ss01"; // Inter: tek katlı a, daha açık rakamlar
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+.site-title,
+.hero-name {
+  letter-spacing: -0.015em;
+}
+
+pre,
+code,
+kbd,
+samp,
+.install-command,
+.tool-card-install {
+  font-family: $code-font-family;
+  font-size: 0.9em;
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// Okuma sayfaları: ortalı dar sütun
+// ─────────────────────────────────────────────────────────────
+//
+// Listeler (ana sayfa, araç listesi) 1100px'in tamamını kullanır; uzun metin
+// içeren sayfalar (araç detayı) okunaklı kalsın diye 880px'lik sütunda durur.
+// Profilim sayfası aynı sütunu kendi bloğunda zaten kullanıyor.
+
+.tool {
+  max-width: 880px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+// ─────────────────────────────────────────────────────────────
+// Kart tasarımı
+// ─────────────────────────────────────────────────────────────
+//
+// Yukarıdaki temel .tool-card kurallarının üstüne biner: daha büyük logo,
+// hafif gölge, hover'da soldan vurgu çizgisi ve tüm kartın tıklanabilir olması.
+
+.logo-sm,
+.letter-mark.logo-sm {
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  font-size: 19px;
+}
+
+.tool-card {
+  position: relative;
+  overflow: hidden;
+  padding: $spacing-unit * 0.7;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+
+  // Soldan çıkan vurgu çizgisi
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 3px;
+    background-color: var(--accent);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.25s ease;
+  }
+
+  &:hover {
+    border-color: var(--accent-soft);
+    box-shadow: 0 12px 28px -14px rgba(0, 0, 0, 0.3);
+
+    &::before {
+      transform: scaleY(1);
+    }
+  }
+}
+
+.tool-card-head {
+  gap: 12px;
+  margin-bottom: 10px;
+  min-height: 42px;
+}
+
+.tool-card-name {
+  font-size: 17px;
+}
+
+// Kartın tamamı tıklanabilir (etiketlerin olduğu alt satır dahil).
+.tool-card-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+// Uzun GitHub açıklamaları kartları birbirinden farklı boyda yapmasın.
+.tool-card-tagline {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+// ─────────────────────────────────────────────────────────────
+// Hareket
+// ─────────────────────────────────────────────────────────────
+//
+// Sayfa açılırken içerik yumuşakça belirir, kartlar sırayla gelir, sayfalar
+// arası geçiş çapraz solma olur. Hepsi yalnızca hareketi azaltma ayarı
+// KAPALI olan ziyaretçiler içindir; ayar açıksa hiçbir şey hareket etmez.
+// Animasyonlar `backwards` doldurur: bitince kart normal hâline döner ve
+// hover'daki yükselme (transform) ezilmez.
+
+@keyframes fade-in {
+  from { opacity: 0; }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  // Sayfalar arası geçiş (tarayıcı destekliyorsa, Chrome 126+ ve Safari 18.2+);
+  // menü çubuğu sabit kalır, yalnızca içerik solar.
+  @view-transition {
+    navigation: auto;
+  }
+
+  .site-header {
+    view-transition-name: site-header;
+  }
+
+  // Sayfa geçişi: daha uzun, yumuşak çapraz solma
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.35s;
+    animation-timing-function: ease;
+  }
+
+  .page-content .wrapper > * {
+    animation: fade-in 0.6s ease both;
+  }
+
+  .hero-avatar,
+  .hero-eyebrow,
+  .hero-name,
+  .hero-intro,
+  .hero-actions,
+  .hero-stats {
+    animation: rise-in 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) backwards;
+  }
+
+  .hero-avatar  { animation-delay: 0.00s; }
+  .hero-eyebrow { animation-delay: 0.05s; }
+  .hero-name    { animation-delay: 0.10s; }
+  .hero-intro   { animation-delay: 0.16s; }
+  .hero-actions { animation-delay: 0.22s; }
+  .hero-stats   { animation-delay: 0.28s; }
+
+  .tool-card {
+    animation: rise-in 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) backwards;
+  }
+
+  // Kartlar sırayla gelir; 12. karttan sonrası aynı anda (uzun bekleme olmasın).
+  @for $i from 1 through 12 {
+    .tool-card:nth-child(#{$i}) {
+      animation-delay: #{0.1 + $i * 0.04}s;
+    }
+  }
+
+  .contrib-box,
+  .readme-body {
+    animation: fade-in 0.7s ease 0.15s backwards;
+  }
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// Alt bilgi
+// ─────────────────────────────────────────────────────────────
+
+.site-footer {
+  padding: $spacing-unit * 0.8 0;
+  margin-top: $spacing-unit;
+}
+
+.footer-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 24px;
+  font-size: 14px;
+  color: var(--muted);
+
+  &::after {
+    display: none;
+  }
+}
+
+.footer-copy {
+  margin: 0;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  a,
+  a:visited {
+    color: var(--muted);
+  }
+
+  a:hover {
+    color: var(--accent);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// Araç detay sayfası
+// ─────────────────────────────────────────────────────────────
+
+.tool {
+  max-width: 1000px;
+}
+
+.tool-head {
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 20px 24px;
+  margin-bottom: $spacing-unit;
+  padding-bottom: $spacing-unit * 0.8;
+  border-bottom: 1px solid var(--border);
+
+  .logo,
+  .letter-mark {
+    width: 72px;
+    height: 72px;
+    border-radius: 16px;
+    font-size: 30px;
+  }
+
+  .tool-links {
+    flex: none;
+    align-self: center;
+    margin: 0;
+  }
+
+  .badges {
+    margin: 14px 0 0;
+  }
+}
+
+.tool-head-body {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+// ── README ve sağdaki yapışkan içindekiler ───────────────────
+
+.readme-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 210px;
+  gap: 32px;
+  align-items: start;
+}
+
+.readme-toc {
+  position: sticky;
+  top: 24px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  padding-left: 16px;
+  border-left: 1px solid var(--border);
+  font-size: 14px;
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    margin: 0;
+  }
+
+  a,
+  a:visited {
+    display: block;
+    padding: 4px 0;
+    line-height: 1.35;
+    color: var(--muted);
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--text);
+  }
+
+  a.is-active {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .toc-h3 a {
+    padding-left: 12px;
+    font-size: 13px;
+  }
+}
+
+.readme-toc-title {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+// Başlığa atlanınca üstte nefes payı kalsın.
+.readme-body h1,
+.readme-body h2,
+.readme-body h3 {
+  scroll-margin-top: 20px;
+}
+
+@media (max-width: 900px) {
+  .readme-layout {
+    display: block;
+  }
+
+  .readme-toc {
+    display: none;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// Mobil
+// ─────────────────────────────────────────────────────────────
+//
+// 600px ve altı. Odak: parmakla rahat basılan alanlar (en az ~44px), tek
+// sütun, taşmayan kutular.
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (max-width: 600px) {
+  // Başlık ve menü: üst satırda site adı + tema düğmesi, altında menü bağlantıları.
+  // Menü kutusu `contents` olur; öğeler doğrudan header'ın flex satırlarına dizilir.
+  .site-header {
+    position: static; // iki satırlık header ekranı fazla kaplar, mobilde sabit kalmasın
+  }
+
+  .site-header .wrapper {
+    min-height: 0;
+    padding: 10px 20px 10px;
+    gap: 6px 0;
+    justify-content: flex-start;
+  }
+
+  .site-title,
+  .site-title:visited {
+    flex: 1 0 calc(100% - 46px); // tema düğmesiyle tam bir satır; menü alta iner
+    min-width: 0;
+    font-size: 21px;
+  }
+
+  .site-nav {
+    display: contents;
+  }
+
+  .theme-toggle {
+    order: 2;
+    width: 38px;
+    height: 38px;
+  }
+
+  // Menü bağlantıları mobilde çerçeveli ve eşit genişlikte: masaüstündeki gibi
+  // soluk metin değil, dokunulabilir düğme gibi görünsün.
+  .site-nav .page-link,
+  .site-nav .page-link:visited,
+  .site-nav .page-link:not(:last-child) {
+    order: 3;
+    flex: 1 1 0;
+    margin: 0 4px 0 0;
+    padding: 9px 6px;
+    font-size: 14.5px;
+    font-weight: 500;
+    text-align: center;
+    white-space: nowrap;
+    color: var(--text);
+    background-color: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+
+  .site-nav .page-link:last-of-type {
+    margin-right: 0;
+  }
+
+  .site-nav .page-link.is-current,
+  .site-nav .page-link.is-current:visited {
+    color: var(--accent);
+    font-weight: 600;
+    background-color: var(--accent-soft);
+    border-color: var(--accent);
+  }
+
+  .site-title {
+    order: 1;
+  }
+
+  .page-heading {
+    font-size: 28px;
+  }
+
+  .section-title {
+    font-size: 20px;
+  }
+
+  // Ana sayfa girişi
+  .hero {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+    margin-bottom: $spacing-unit * 1.2;
+  }
+
+  .hero-avatar {
+    width: 88px;
+    height: 88px;
+  }
+
+  .hero-intro {
+    font-size: 17px;
+  }
+
+  // Butonlar eşit genişlikte, yan yana; sığmayanlar alt satıra iner.
+  .hero-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+    gap: 8px;
+
+    .tool-link {
+      box-sizing: border-box;
+      min-height: 44px;
+      padding: 8px 10px;
+      font-size: 15px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+    }
+  }
+
+  // Kartlar ve kategori şeridi
+  .tool-cards {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .tool-card {
+    padding: 18px;
+  }
+
+  .category-cards {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  // Araç detayı
+  .tool-head {
+    gap: 16px;
+
+    .logo,
+    .letter-mark {
+      width: 56px;
+      height: 56px;
+      border-radius: 13px;
+      font-size: 24px;
+    }
+
+    .tool-links {
+      width: 100%;
+      align-self: stretch;
+    }
+  }
+
+  .tool-title {
+    font-size: 28px;
+  }
+
+  .tool-tagline {
+    font-size: 16px;
+  }
+
+  .tool-links .tool-link {
+    flex: 1 1 calc(50% - 4px);
+    box-sizing: border-box;
+    min-height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .readme-head {
+    flex-wrap: wrap;
+  }
+
+  .readme-body {
+    padding: 14px;
+    font-size: 15px;
+    max-height: 32rem;
+  }
+
+  .readme-toggle {
+    min-height: 44px;
+  }
+
+  .tool-facts {
+    font-size: 14px;
+  }
+
+  // Profilim
+  .profile-body h2 {
+    font-size: 22px;
+  }
+
+  .contrib-years button {
+    min-height: 40px;
+  }
+
+  // Alt bilgi
+  .footer-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+
+// Başlık çubuğunun hemen altındaki README: çift çizgi olmasın.
+.tool-head + .readme {
+  border-top: 0;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+// ── Başlık hiyerarşisi ───────────────────────────────────────
+// Kalın Inter + sıkı satır aralığı; sayfa > bölüm > kart boyut sırası.
+
+h1,
+h2,
+h3,
+.site-title,
+.hero-name {
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.page-heading {
+  font-size: 34px;
+  font-weight: 800;
+}
+
+.section-title {
+  position: relative;
+  font-size: 24px;
+  padding-top: 14px;
+
+  // Bölüm başlığının üstünde kısa accent çizgisi
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 24px;
+    height: 3px;
+    border-radius: 2px;
+    background-color: var(--accent);
+  }
+}
+
+.section-eyebrow {
+  margin: 0 0 2px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+// Etiketi olan başlıkta çizgiye gerek yok (etiket zaten üstte duruyor)
+.section-eyebrow + .section-title {
+  padding-top: 0;
+
+  &::before {
+    display: none;
+  }
+}
+
+.tool-card-name {
+  font-size: 17px;
+  font-weight: 650;
+}
+
+// README ve profil gövdesindeki başlıklar çizgisiz kalsın
+.readme-body,
+.profile-body {
+  h1,
+  h2,
+  h3 {
+    font-weight: 700;
+  }
+}
+
+@media (max-width: 600px) {
+  .page-heading {
+    font-size: 28px;
+  }
+
+  .section-title {
+    font-size: 21px;
+  }
+}
+
+// ── Yıldızladığım depolar ────────────────────────────────────
+
+.star-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: $spacing-unit * 0.8;
+
+  input,
+  select {
+    box-sizing: border-box;
+    height: 40px;
+    padding: 0 12px;
+    font: inherit;
+    font-size: 15px;
+    color: var(--text);
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    &:focus {
+      outline: 2px solid var(--accent-soft);
+      border-color: var(--accent);
+    }
+  }
+
+  input {
+    flex: 1 1 220px;
+    max-width: 360px;
+  }
+}
+
+.star-count {
+  margin-left: auto;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.gh-status {
+  color: var(--muted);
+}
+
+.star-more {
+  margin-top: $spacing-unit * 0.8;
+  text-align: center;
+}
+
+.star-tools[hidden],
+.star-more [hidden],
+.gh-status[hidden] {
+  display: none;
+}
+
+// Bölüm başlığı solda, "tümü" bağlantısı sağda
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: $spacing-unit * 0.5;
+
+  .section-title {
+    margin-bottom: 0;
+  }
+}
+
+.section-all {
+  flex: none;
+  font-size: 15px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+
+// ── Dil seçici (EN | TR) ────────────────────────────────────────────────────
+.lang-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  margin-right: 4px;
+}
+
+.lang-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 5px;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 500;
+  opacity: 0.4;
+  transition: opacity 0.15s;
+  border-radius: 3px;
+
+  &:hover { opacity: 0.75; }
+
+  &.is-active,
+  &[aria-pressed="true"] {
+    opacity: 1;
+    font-weight: 700;
+  }
+}
+
+.lang-sep {
+  opacity: 0.25;
+  font-size: 0.7rem;
+  pointer-events: none;
+}
+
+// ── Profil sayfası: özgeçmiş yerine okunabilir portföy görünümü ──────────────
+
+.profile-body {
+  max-width: none;
+}
+
+.profile-content {
+  display: grid;
+  gap: 46px;
+}
+
+.profile-intro {
+  padding: 30px;
+  background: linear-gradient(135deg, var(--accent-soft), transparent 58%), var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+
+  h2 {
+    max-width: 18ch;
+    margin: 4px 0 16px;
+    font-size: clamp(28px, 5vw, 42px);
+    line-height: 1.12;
+  }
+
+  > p:not(.profile-kicker) {
+    max-width: 68ch;
+    font-size: 17px;
+    line-height: 1.65;
+  }
+}
+
+.profile-kicker {
+  margin: 0;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.profile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 22px;
+}
+
+.profile-section {
+  margin: 0;
+}
+
+.experience-card,
+.education-row {
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.experience-card > p:last-child,
+.education-row p:last-child {
+  margin-bottom: 0;
+}
+
+.experience-head,
+.education-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.experience-head h3,
+.education-row h3,
+.skill-card h3 {
+  margin: 0 0 4px;
+}
+
+.experience-company,
+.education-row p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.experience-date {
+  flex: none;
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.skill-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.skill-card {
+  padding: 18px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+
+  h3 {
+    color: var(--accent);
+    font-size: 16px;
+  }
+
+  p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+}
+
+.profile-contact {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 26px 28px;
+  background: var(--surface);
+  border: 1px solid var(--accent-soft);
+  border-radius: 16px;
+
+  h2 {
+    margin: 4px 0 0;
+    font-size: 22px;
+  }
+
+  .tool-link {
+    flex: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .profile-content {
+    gap: 34px;
+  }
+
+  .profile-intro {
+    padding: 22px 20px;
+  }
+
+  .profile-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    .tool-link {
+      box-sizing: border-box;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+  }
+
+  .experience-head,
+  .education-row,
+  .profile-contact {
+    flex-direction: column;
+  }
+
+  .experience-card,
+  .education-row,
+  .profile-contact {
+    padding: 20px;
+  }
+
+  .skill-groups {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-contact {
+    align-items: stretch;
+
+    .tool-link {
+      text-align: center;
+    }
+  }
+}
+
+// ── Profil: katkı sağlanan marka projeleri sliderı ───────────────────────────
+
+.brand-projects {
+  min-width: 0;
+}
+
+.brand-section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 16px;
+
+  .section-title {
+    margin-bottom: 8px;
+  }
+}
+
+.brand-projects-lead {
+  max-width: 66ch;
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.brand-slider-controls {
+  flex: none;
+  display: flex;
+  gap: 8px;
+
+  button {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    color: var(--accent);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    font: inherit;
+    font-size: 19px;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+
+    &:hover:not(:disabled) {
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: default;
+    }
+  }
+}
+
+.brand-slider-viewport {
+  overflow-x: auto;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-inline: contain;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent-soft);
+    outline-offset: 4px;
+    border-radius: 14px;
+  }
+}
+
+.brand-slider-track {
+  display: flex;
+  gap: 12px;
+  width: max-content;
+  list-style: none;
+  margin: 0;
+  padding: 1px;
+}
+
+.brand-slide {
+  box-sizing: border-box;
+  width: 232px;
+  padding: 12px;
+  scroll-snap-align: start;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+
+  > p {
+    margin: 10px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+  }
+}
+
+.brand-logo-frame {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 136px;
+  padding: 10px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(43, 47, 54, 0.1);
+  border-radius: 10px;
+
+  img {
+    display: block;
+    position: absolute;
+    inset: 12px;
+    width: calc(100% - 24px);
+    height: calc(100% - 24px);
+    object-fit: contain;
+  }
+
+  &.has-image {
+    img {
+      display: block;
+    }
+
+    .brand-logo-fallback {
+      display: none;
+    }
+  }
+}
+
+.brand-logo-fallback {
+  display: none;
+  color: #4d5560;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .brand-section-head {
+    align-items: flex-start;
+  }
+
+  .brand-slider-controls {
+    display: none;
+  }
+
+  .brand-slide {
+    width: calc((100vw - 56px) / 2);
+    min-width: 132px;
+    max-width: 168px;
+    padding: 8px;
+
+    > p {
+      margin-top: 8px;
+      font-size: 12px;
+    }
+  }
+
+  .brand-logo-frame {
+    height: 104px;
+
+    img {
+      inset: 8px;
+      width: calc(100% - 16px);
+      height: calc(100% - 16px);
+    }
+  }
+}
+
+// Marka sliderı: oklar yerine alt sürükleme çubuğu ve odaklanan kart efekti.
+.brand-section-head {
+  align-items: flex-start;
+}
+
+.brand-slider-viewport {
+  box-sizing: border-box;
+  padding: 12px 4px 16px;
+  margin: -12px -4px 0;
+}
+
+.brand-slide {
+  position: relative;
+  transform: scale(1);
+  transition: transform 0.22s cubic-bezier(0.22, 0.61, 0.36, 1),
+              border-color 0.22s ease,
+              box-shadow 0.22s ease;
+
+  &:hover {
+    z-index: 2;
+    transform: scale(1.06);
+    border-color: var(--accent);
+    box-shadow: 0 16px 34px -18px rgba(0, 0, 0, 0.55);
+  }
+}
+
+@media (hover: none) {
+  .brand-slide:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}

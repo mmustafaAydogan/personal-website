@@ -1,0 +1,30 @@
+---
+layout: default
+---
+{%- assign meta = site.data.tools_meta %}
+<div class="tools-index">
+  <header class="page-head">
+    <h1 class="page-heading" data-tr="{{ meta.title_tr }}">{{ meta.title }}</h1>
+    <p class="page-lead" data-tr="{{ meta.description_tr }}">{{ meta.description }}</p>
+  </header>
+
+  {{ content }}
+
+  {%- include category-chips.html %}
+
+  {%- for category in meta.categories %}
+  {%- assign items = site.tools | where: "category", category.id | sort: "order" %}
+  {%- if items.size > 0 %}
+  <section class="section" id="{{ category.id }}">
+    <h2 class="section-title" data-tr="{{ category.name_tr }}">{{ category.name }}</h2>
+    <ul class="tool-cards">
+      {%- for item in items %}
+      {%- include tool-card.html tool=item show_category=false %}
+      {%- endfor %}
+    </ul>
+  </section>
+  {%- endif %}
+  {%- endfor %}
+
+  <p class="page-updated" data-tr="Site son derleme: {{ site.time | date: "%d.%m.%Y" }}">Last built: {{ site.time | date: "%Y-%m-%d" }}</p>
+</div>

@@ -1,0 +1,59 @@
+---
+layout: default
+---
+{%- assign profile = site.data.profile -%}
+<div class="home">
+
+  <section class="hero">
+    {%- if site.github_username %}
+    <img class="hero-avatar" src="https://github.com/{{ site.github_username }}.png?size=224" width="112" height="112" alt="{{ profile.name }} profile photo">
+    {%- endif %}
+    <div class="hero-body">
+      <p class="hero-eyebrow" data-tr="{{ profile.greeting_tr }}">{{ profile.greeting }}</p>
+      <h1 class="hero-name">{{ profile.name }}</h1>
+      <p class="hero-intro" data-tr="{{ profile.intro_tr }}">{{ profile.intro }}</p>
+      <p class="hero-actions">
+        <a class="tool-link is-primary" href="{{ '/tools/' | relative_url }}" data-tr="Araçlarım">My Tools</a>
+        <a class="tool-link" href="{{ '/profile/' | relative_url }}" data-tr="Profilim">About Me</a>
+        {%- if site.github_username %}
+        <a class="tool-link" href="https://github.com/{{ site.github_username }}" target="_blank" rel="noopener noreferrer">GitHub</a>
+        {%- endif %}
+      </p>
+      {%- if site.github_username %}
+      <ul class="badges hero-stats" data-gh-user="{{ site.github_username }}">
+        <li class="badge" data-gh="repos" hidden></li>
+        <li class="badge" data-gh="followers" hidden></li>
+        <li class="badge" data-gh="location" hidden></li>
+      </ul>
+      {%- endif %}
+    </div>
+  </section>
+
+  {{ content }}
+
+  {%- assign featured = site.tools | where: "featured", true | sort: "title" %}
+  {%- if featured.size > 0 %}
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title" data-tr="Öne çıkan araçlar">Featured Tools</h2>
+      <a class="section-all" href="{{ '/tools/' | relative_url }}"><span data-tr="Tümü">All</span> ({{ site.tools.size }}) &rarr;</a>
+    </div>
+    <ul class="tool-cards">
+      {%- for item in featured %}
+      {%- include tool-card.html tool=item %}
+      {%- endfor %}
+    </ul>
+  </section>
+  {%- endif %}
+
+  {%- if site.github_username %}
+  <section class="section" data-gh-user="{{ site.github_username }}" data-gh="repo-section" data-project-url="{{ '/projects/' | relative_url }}" hidden>
+    <div class="section-head">
+      <h2 class="section-title" data-tr="GitHub'da son çalıştıklarım">Recent GitHub Projects</h2>
+      <a class="section-all" href="https://github.com/{{ site.github_username }}?tab=repositories" target="_blank" rel="noopener noreferrer"><span data-tr="Tüm repolarım">All my repos</span> &rarr;</a>
+    </div>
+    <ul class="tool-cards" data-gh="repo-list"></ul>
+  </section>
+  {%- endif %}
+
+</div>

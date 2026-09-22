@@ -1,0 +1,23 @@
+{%- comment -%}
+minima'nın header.html'inin yerine geçer. Fark: hamburger menü yok ve sağda
+tema düğmesi ile dil seçici (EN | TR) var.
+{%- endcomment -%}
+<header class="site-header" role="banner">
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="{{ '/' | relative_url }}">{{ site.title | escape }}</a>
+    <nav class="site-nav" aria-label="Main menu">
+      {%- for path in site.header_pages %}
+      {%- assign my_page = site.pages | where: "path", path | first %}
+      {%- if my_page.title %}
+      <a class="page-link{% if page.url == my_page.url or page.url contains my_page.url and my_page.url != '/' %} is-current{% endif %}" href="{{ my_page.url | relative_url }}"{% if page.url == my_page.url or page.url contains my_page.url and my_page.url != '/' %} aria-current="page"{% endif %}{% if my_page.nav_title_tr or my_page.title_tr %} data-tr="{{ my_page.nav_title_tr | default: my_page.title_tr | escape }}"{% endif %}>{{ my_page.nav_title | default: my_page.title | escape }}</a>
+      {%- endif %}
+      {%- endfor %}
+      <span class="lang-switcher" aria-label="Select language">
+        <button type="button" class="lang-btn is-active" data-lang-switch="en" aria-pressed="true">EN</button>
+        <span class="lang-sep" aria-hidden="true">|</span>
+        <button type="button" class="lang-btn" data-lang-switch="tr" aria-pressed="false">TR</button>
+      </span>
+      <button type="button" class="theme-toggle" aria-label="Toggle dark theme" title="Dark theme">&#9790;</button>
+    </nav>
+  </div>
+</header>
