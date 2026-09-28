@@ -67,7 +67,7 @@ description: "Full Stack Developer focused on PHP, Magento 2, Shopify and e-comm
 <div class="profile-content" data-lang="tr" hidden>
   <section class="profile-intro" aria-labelledby="about-tr">
     <p class="profile-kicker">Full Stack Developer · E-ticaret</p>
-    <h2 id="about-tr">E-ticaretin arkasındaki sistemleri geliştiriyorum.</h2>
+    <h2 id="about-tr">E-ticaret sistemleri geliştiriyorum.</h2>
     <p>PHP tabanlı web uygulamaları ve e-ticaret sistemleri üzerine çalışan bir Full Stack Developer’ım. Magento 2, Shopify, Symfony ve Laravel ile mağazaları ERP, pazaryeri, ödeme, lojistik ve CRM platformlarına bağlayan çözümler geliştiriyorum.</p>
     <p>Karmaşık ticaret süreçlerini güvenilir ve sürdürülebilir yazılımlara dönüştürmekten; performans, asenkron işlem ve sistem entegrasyonu problemleri üzerinde çalışmaktan keyif alıyorum.</p>
     <div class="profile-actions">

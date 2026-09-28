@@ -1,10 +1,13 @@
 # Home page hero section. English is the default; _tr fields are the Turkish alternatives.
-# Avatar, repo count, followers and latest repos come from GitHub automatically.
+# Repo count, followers and latest repos come from GitHub automatically.
 name: "Mustafa Aydoğan"
 greeting: "Hi, I'm"
 greeting_tr: "Merhaba, ben"
-intro: "I'm a Full Stack Developer focused on PHP and e-commerce. This is where I share the tools I use in my development environment, GitHub repositories I find useful, and a little about the work I do — both as a personal space and a practical resource for other developers."
-intro_tr: "PHP ve e-ticaret odaklı çalışan bir Full Stack Developer'ım. Burada kullandığım geliştirme araçlarını, faydalı bulduğum GitHub repolarını ve yaptığım işlerden küçük parçaları paylaşıyorum; burası hem kişisel alanım hem de diğer geliştiriciler için pratik bir kaynak."
+intro: "I'm a Full Stack Developer focused on PHP and e-commerce. This is where I share the tools I use in my development environment, GitHub repositories I find useful, and a little about the work I do."
+intro_tr: "PHP ve e-ticaret odaklı çalışan bir Full Stack Developer'ım. Burada kullandığım geliştirme araçlarını, faydalı bulduğum GitHub repolarını ve yaptığım işlerden küçük parçaları paylaşıyorum."
+
+# Profile photo in the hero section. Remove this line to fall back to the GitHub avatar.
+avatar: "/assets/img/mustafa-aydogan.jpg"
 
 # CV file. Place the PDF at this path and the "Download CV" button appears automatically.
 cv: "/assets/cv-en.pdf"

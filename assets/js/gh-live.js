@@ -16,6 +16,13 @@
  *     [data-gh="repo-list"]                      son çalışılan depolar (kart olarak basılır)
  *     [data-gh="repo-section"]                   depo listesini saran bölüm; boşsa gizli kalır
  *
+ *   [data-gh-stars="kullanici"]   yıldızladığım depoların listesi
+ *     [data-project-url="/projects/"]            kartların gideceği detay sayfası; yoksa
+ *                                                kartlar doğrudan GitHub'a gider
+ *
+ *   [data-gh-project]             depo detay sayfası, ?repo=sahip/depo ile çalışır
+ *     [data-gh-owner="kullanici"] ?repo= değerinde sahip yazmıyorsa kullanılan sahip
+ *
  * Sınırlar ve önlemler:
  *   - Kimliksiz GitHub API'si ziyaretçi IP'si başına saatte 60 istek verir.
  *     Yanıtlar localStorage'da 1 saat tutulur; hata olursa eski kopya kullanılır.
@@ -380,7 +387,7 @@
   function repoCard(repo, full, internal, projectUrl) {
     var card = el("li", "tool-card");
     var link = el("a", "tool-card-link");
-    link.href = internal ? projectUrl + "?repo=" + encodeURIComponent(repo.name) : repo.html_url;
+    link.href = internal ? projectUrl + "?repo=" + encodeURIComponent(repo.full_name) : repo.html_url;
     if (!internal) {
       link.target = "_blank";
       link.rel = "noopener noreferrer";
@@ -469,6 +476,7 @@
   }
 
   function setupStars(root, user) {
+    var projectUrl = root.getAttribute("data-project-url");
     var list = root.querySelector('[data-gh="star-list"]');
     var status = root.querySelector('[data-gh="star-status"]');
     var search = root.querySelector('[data-gh="star-search"]');
@@ -485,7 +493,7 @@
         shown = 0;
       }
       matched.slice(shown, shown + STAR_STEP).forEach(function (r) {
-        list.appendChild(repoCard(r, true));
+        list.appendChild(repoCard(r, true, !!projectUrl, projectUrl));
       });
       shown = Math.min(shown + STAR_STEP, matched.length);
       more.hidden = shown >= matched.length;
@@ -538,27 +546,51 @@
     });
   }
 
+  // ?repo= değeri "sahip/depo" olabilir; sadece "depo" yazılmışsa sayfanın kendi
+  // sahibi (data-gh-owner) kullanılır, böylece eski linkler de çalışmaya devam eder.
+  function parseRepoParam(value, fallbackOwner) {
+    var part = /^[A-Za-z0-9._-]+$/;
+    var parts = (value || "").split("/");
+    if (parts.length > 2) return null; // "sahip/depo/fazlalik" kabul edilmez
+    var owner = parts.length === 2 ? parts[0] : fallbackOwner;
+    var name = parts.length === 2 ? parts[1] : parts[0];
+    if (!owner || !name || !part.test(owner) || !part.test(name)) return null;
+    return { owner: owner, name: name, full: owner + "/" + name };
+  }
+
   function setupProjectPage() {
     document.querySelectorAll("[data-gh-project]").forEach(function (root) {
-      var owner = root.getAttribute("data-gh-owner");
-      var name = new URLSearchParams(window.location.search).get("repo") || "";
-      if (!owner || !/^[A-Za-z0-9._-]+$/.test(name)) {
+      var siteOwner = root.getAttribute("data-gh-owner");
+      var target = parseRepoParam(new URLSearchParams(window.location.search).get("repo"), siteOwner);
+      if (!target) {
         root.querySelectorAll(".tool-head,.readme,.tool-facts").forEach(function (node) { node.hidden = true; });
         var error = root.querySelector("[data-project-error]");
         error.hidden = false;
-        error.textContent = language() === "tr" ? "Geçerli bir proje seçilmedi." : "No valid project was selected.";
+        error.textContent = language() === "tr" ? "Geçerli bir depo seçilmedi." : "No valid repository was selected.";
         return;
       }
 
-      var repo = owner + "/" + name;
-      var github = repoUrl(repo);
-      root.setAttribute("data-gh-repo", repo);
-      root.querySelector("[data-project-title]").textContent = name;
-      root.querySelector("[data-project-mark]").textContent = name.charAt(0).toUpperCase();
+      // Kendi depolarımda sade ad ("codeburn"), yıldızladıklarımda sahibiyle
+      // birlikte ("facebook/react") gösterilir; liste kartları da böyle yazıyor.
+      var mine = siteOwner && target.owner.toLowerCase() === siteOwner.toLowerCase();
+      var heading = mine ? target.name : target.full;
+      var github = repoUrl(target.full);
+
+      root.setAttribute("data-gh-repo", target.full);
+      root.querySelector("[data-project-title]").textContent = heading;
+      root.querySelector("[data-project-mark]").textContent = target.name.charAt(0).toUpperCase();
       root.querySelectorAll("[data-project-github]").forEach(function (link) { link.href = github; });
       var repoLabel = root.querySelector("[data-project-repo]");
-      if (repoLabel) repoLabel.textContent = repo;
-      document.title = name + " | Mustafa Aydoğan";
+      if (repoLabel) repoLabel.textContent = target.full;
+
+      // Breadcrumb ve başlık etiketinin iki hali şablonda duruyor; deponun
+      // sahibine göre biri gösterilir.
+      root.querySelectorAll("[data-project-crumb], [data-project-eyebrow]").forEach(function (node) {
+        var variant = node.getAttribute("data-project-crumb") || node.getAttribute("data-project-eyebrow");
+        node.hidden = variant !== (mine ? "own" : "starred");
+      });
+
+      document.title = heading + " | Mustafa Aydoğan";
     });
   }
 

@@ -1921,6 +1921,14 @@ h3,
   }
 }
 
+// Başlığın 18ch sınırı İngilizce metne göre: "I build the systems behind online
+// commerce." iki dengeli satıra bölünsün diye. Türkçesi ("E-ticaret sistemleri
+// geliştiriyorum.") tek satıra sığacak kadar kısa, sınır o yüzden dile göre gevşiyor.
+// Ekran daraldığında yine sarmalar; clamp ile punto da küçüldüğü için taşma olmaz.
+[data-lang="tr"] .profile-intro h2 {
+  max-width: 32ch;
+}
+
 .profile-kicker {
   margin: 0;
   color: var(--accent);

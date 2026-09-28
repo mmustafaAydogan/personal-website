@@ -5,13 +5,15 @@ layout: default
   <p class="tool-crumb">
     <a href="{{ '/' | relative_url }}" data-tr="Ana sayfa">Home</a>
     <span class="tool-crumb-sep" aria-hidden="true">&rsaquo;</span>
-    <span data-tr="Projelerim">My Projects</span>
+    <span data-project-crumb="own" data-tr="Projelerim">My Projects</span>
+    <a data-project-crumb="starred" href="{{ '/stars/' | relative_url }}" data-tr="Yıldızladıklarım" hidden>Starred</a>
   </p>
 
   <header class="tool-head">
     <span class="letter-mark logo-lg" data-project-mark aria-hidden="true">P</span>
     <div class="tool-head-body">
-      <p class="section-eyebrow" data-tr="GitHub projem">GitHub project</p>
+      <p class="section-eyebrow" data-project-eyebrow="own" data-tr="GitHub projem">GitHub project</p>
+      <p class="section-eyebrow" data-project-eyebrow="starred" data-tr="Yıldızladığım repo" hidden>Starred repo</p>
       <h1 class="tool-title" data-project-title>Project</h1>
       <p class="tool-tagline is-loading" data-gh="tagline">Loading from GitHub…</p>
       <ul class="badges">

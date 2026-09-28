@@ -5,7 +5,9 @@ layout: default
 <div class="home">
 
   <section class="hero">
-    {%- if site.github_username %}
+    {%- if profile.avatar %}
+    <img class="hero-avatar" src="{{ profile.avatar | relative_url }}" width="112" height="112" alt="{{ profile.name }} profile photo">
+    {%- elsif site.github_username %}
     <img class="hero-avatar" src="https://github.com/{{ site.github_username }}.png?size=224" width="112" height="112" alt="{{ profile.name }} profile photo">
     {%- endif %}
     <div class="hero-body">
